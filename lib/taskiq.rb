@@ -1,10 +1,10 @@
 require 'sidekiq'
 
 module Taskiq
-  class PerformableTask < Struct.new(:task)
+  class PerformableTask
     include Sidekiq::Worker
 
-    def perform
+    def perform(task)
       system "rake #{task}"
     end
   end
