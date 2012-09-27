@@ -1,4 +1,4 @@
-module DelayedTask
+module Taskiq
   class << self
     include Rake::DSL if defined?(Rake::DSL)
     def add_delayed_tasks
@@ -7,7 +7,7 @@ module DelayedTask
           Rake::Task["environment"].invoke
           values = args.to_hash.values.empty? ? "" : "[" + args.to_hash.values.join(",") + "]"
           invocation = task.name + values
-          Delayed::Job.enqueue DelayedTask::PerformableTask.new(invocation)
+          Taskiq::PerformableTask.perform_async(invocation)
           puts "Enqueued job: rake #{invocation}"
         end
       end
@@ -15,4 +15,4 @@ module DelayedTask
   end
 end
 
-DelayedTask.add_delayed_tasks
+Taskiq.add_delayed_tasks
