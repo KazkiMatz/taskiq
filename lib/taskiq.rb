@@ -5,7 +5,9 @@ module Taskiq
     include Sidekiq::Worker
 
     def perform(task)
-      system "rake #{task}"
+      unless system("rake #{task}")
+        raise RuntimeError, "Rake task #{task} failed!"
+      end
     end
   end
 end
